@@ -29,37 +29,37 @@ bash quickstart.sh
 🧩 Cài đặt từng bước
 1️⃣ Clone dự án
 bash
-Sao chép mã
+
 git clone https://github.com/vdlaptrinh/mcp-history.git
 cd mcp-history/
 2️⃣ Tạo môi trường ảo Python
 bash
-Sao chép mã
+
 python3 -m venv mcp_history_env
 source mcp_history_env/bin/activate
 💡 Trên Windows:
 
 bash
-Sao chép mã
+
 mcp_history_env\Scripts\activate
 3️⃣ Cài thư viện phụ thuộc
 bash
-Sao chép mã
+
 pip install -r requirements.txt
 4️⃣ Cấu hình endpoint MCP
 Thiết lập URL endpoint để kết nối tới máy chủ MCP:
 
 bash
-Sao chép mã
+
 export MCP_ENDPOINT=wss://api.xiaozhi.me/mcp...
 ⚠️ Nếu dùng Windows PowerShell:
 
 powershell
-Sao chép mã
+
 setx MCP_ENDPOINT "wss://api.xiaozhi.me/mcp..."
 🚀 Chạy MCP Skill
 bash
-Sao chép mã
+
 python mcp_pipe.py /home/pi/mcp-history/server.py
 ✅ Thay /home/pi/mcp-history/server.py bằng đường dẫn thực tế trên máy bạn.
 
@@ -67,20 +67,20 @@ python mcp_pipe.py /home/pi/mcp-history/server.py
 Khi khởi chạy thành công, log sẽ hiện như sau:
 
 csharp
-Sao chép mã
+
 [MCP] Connected to wss://api.xiaozhi.me/mcp...
 [MCP] Registered skill: NgayNayNamXua
 Khi được gọi qua XiaoZhi AI hoặc ChatGPT, tool history_today sẽ trả về:
 
 diff
-Sao chép mã
+
 📜 Ngày này năm xưa:
 - 1492: Christopher Columbus khám phá châu Mỹ
 - 1968: NASA phóng Apollo 7
 - 2006: Google mua lại YouTube
 📂 Cấu trúc thư mục
 css
-Sao chép mã
+
 mcp-history/
 │
 ├── server.py           # MCP skill chính (Ngày này năm xưa)
@@ -92,12 +92,12 @@ mcp-history/
 Nếu muốn MCP-History chạy tự động khi bật nguồn, tạo service như sau:
 
 bash
-Sao chép mã
+
 sudo nano /etc/systemd/system/mcp-history.service
 Thêm nội dung:
 
 ini
-Sao chép mã
+
 [Unit]
 Description=MCP-History Skill
 After=network.target
@@ -113,20 +113,20 @@ WantedBy=multi-user.target
 Lưu lại và kích hoạt:
 
 bash
-Sao chép mã
+
 sudo systemctl daemon-reload
 sudo systemctl enable mcp-history
 sudo systemctl start mcp-history
 Xem log hoạt động:
 
 bash
-Sao chép mã
+
 journalctl -u mcp-history -f
 🧾 index.json (tùy chọn)
 File này giúp mô tả skill cho MCP client (như ChatGPT hoặc XiaoZhi):
 
 json
-Sao chép mã
+
 {
   "name": "NgayNayNamXua",
   "description": "Trả về các sự kiện lịch sử nổi bật trong ngày hôm nay.",
