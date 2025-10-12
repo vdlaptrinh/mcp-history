@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "local-stdio-ngay-nay-nam-xua": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "ngay_nay_nam_xua.server"]
+    }
+  }
+}
