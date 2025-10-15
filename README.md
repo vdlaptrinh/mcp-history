@@ -151,10 +151,117 @@ Bạn có thể:
 VD Lập Trình
 📘 GitHub: @vdlaptrinh
 🌐 Website: https://vdlaptrinh.github.io
-💬 Email: contact@vdlaptrinh.dev
+💬 Email: contact@vdlaptrinh.com
 
 ##  Giấy phép
 Phát hành theo MIT License.
 Bạn được phép sử dụng, chỉnh sửa, phân phối tự do với điều kiện ghi rõ nguồn gốc.
 
 ## 🧩 MCP-History – Một phần mở rộng nhỏ nhưng mạnh mẽ cho hệ sinh thái XiaoZhi AI.
+
+## Tự động thực hiện:
+
+Kích hoạt môi trường ảo mcp_history_env
+
+Thiết lập endpoint MCP_ENDPOINT
+
+Chạy mcp_pipe.py kết nối với server.py
+
+Khởi động cùng hệ thống bằng systemd
+
+## 1️⃣ Viết script khởi động
+Tạo file:
+```
+sudo nano /home/pi/start_mcp_history.sh
+```
+
+Thêm nội dung sau:
+```
+#!/bin/bash
+# === Script khởi động MCP-History ===
+
+# Chờ hệ thống ổn định mạng (quan trọng để kết nối wss)
+sleep 10
+
+# Kích hoạt môi trường ảo
+source /home/pi/mcp-history/mcp_history_env/bin/activate
+
+# Thiết lập endpoint MCP
+export MCP_ENDPOINT=wss://api.xiaozhi.me/...
+
+# Chuyển đến thư mục dự án
+cd /home/pi/mcp-history
+
+# Ghi log để dễ kiểm tra
+echo "=== MCP-History started at $(date) ===" >> /home/pi/mcp-history/mcp_history.log
+
+# Chạy chương trình (server + pipe)
+python3 mcp_pipe.py server.py >> /home/pi/mcp-history/mcp_history.log 2>&1
+```
+
+Lưu lại (Ctrl + O, Enter, Ctrl + X), rồi cấp quyền thực thi:
+```
+sudo chmod +x /home/pi/start_mcp_history.sh
+```
+## ⚙️ 2️⃣ Tạo file dịch vụ systemd
+
+Tạo service:
+```
+sudo nano /etc/systemd/system/mcp_history.service
+```
+
+
+Thêm nội dung sau:
+```
+[Unit]
+Description=MCP-History Skill for XiaoZhi AI
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/mcp-history
+ExecStart=/home/pi/start_mcp_history.sh
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/pi/mcp-history/mcp_history.log
+StandardError=append:/home/pi/mcp-history/mcp_history.log
+Environment="MCP_ENDPOINT=wss://api.xiaozhi.me/..."
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Lưu lại và thoát.
+
+## 🚀 3️⃣ Kích hoạt và khởi động dịch vụ
+
+Chạy các lệnh sau:
+```
+sudo systemctl daemon-reload
+sudo systemctl enable mcp_history.service
+sudo systemctl start mcp_history.service
+```
+
+
+Kiểm tra trạng thái:
+
+sudo systemctl status mcp_history.service
+
+## 🧩 4️⃣ Kiểm tra log hoạt động
+
+Xem log MCP-History:
+```
+tail -f /home/pi/mcp-history/mcp_history.log
+```
+## ✅ 5️⃣ Tự khởi động sau reboot
+
+Từ giờ, mỗi lần Raspberry Pi khởi động, nó sẽ tự động:
+
+kích hoạt môi trường mcp_history_env
+
+kết nối tới wss://api.xiaozhi.me/mcp-history
+
+chạy mcp_pipe.py + server.py
+
+ghi log ra /home/pi/mcp-history/mcp_history.log
