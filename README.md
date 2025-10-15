@@ -88,38 +88,7 @@ mcp-history/
 ├── README.md           # Tài liệu hướng dẫn
 └── index.json          # Metadata mô tả skill (tùy chọn)
 ```
-## 🔁 Tự động khởi động trên Raspberry Pi
-Nếu muốn MCP-History chạy tự động khi bật nguồn, tạo service:
 
-```
-sudo nano /etc/systemd/system/mcp-history.service
-```
-Thêm nội dung:
-```
-[Unit]
-Description=MCP-History Skill
-After=network.target
-
-[Service]
-User=pi
-WorkingDirectory=/home/pi/mcp-history
-ExecStart=/home/pi/mcp_history_env/bin/python3 /home/pi/mcp-history/mcp_pipe.py /home/pi/mcp-history/server.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-Lưu lại và kích hoạt:
-
-```
-sudo systemctl daemon-reload
-sudo systemctl enable mcp-history
-sudo systemctl start mcp-history
-```
-Xem log hoạt động:
-```
-journalctl -u mcp-history -f
-```
 🧾 index.json (tùy chọn)
 File này giúp mô tả skill cho MCP client (như ChatGPT hoặc XiaoZhi):
 
